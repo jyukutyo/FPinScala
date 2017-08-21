@@ -1,3 +1,5 @@
+package excercise2
+
 object Exercise2_1 extends App {
 
   def fib(n: Int): Int = {
