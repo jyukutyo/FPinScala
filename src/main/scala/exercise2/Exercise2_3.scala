@@ -1,4 +1,4 @@
-package excercise2
+package exercise2
 
 
 object Exercise2_3 extends App {
