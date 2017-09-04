@@ -1,31 +1,29 @@
 package exercise5
 
-object Exercise5_7 extends App {
+object Exercise5_15 extends App {
+
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
+    f(z) match {
+      case Some((a, b)) => Stream.cons(a, unfold(b)(f))
+      case _ => Stream.empty
+    }
+  }
 
   trait Stream[+A] {
 
-    def map[B](f: A => B): Stream[B] = {
-      foldRight(Stream.empty[B])((a, b) => Stream.cons(f(a), b))
-    }
-
-    def filetr(f: A => Boolean): Stream[A] = {
-      foldRight(Stream.empty[A])((a, b) => if (f(a)) Stream.cons(a, b) else b)
+    def tails: Stream[Stream[A]] = {
+      unfold(this) {
+        case s@Cons(_, t) => Some(s, t())
+        case _ => None
+      }
+//      unfold(this) {
+//        case Empty => None
+//        case s => Some((s, s drop 1))
+//      } append Stream(Stream.empty)
     }
 
     def append[B >: A](a: => Stream[B]): Stream[B] = {
       foldRight(Stream.empty[A])((a, b) => Stream.cons(a, b))
-//      foldRight(a)((h,t) => Stream.cons(h,t))
-    }
-
-    def flatMap[B](f: A => Option[B]): Stream[B] = {
-      foldRight(Stream.empty[B])((a, b) => {
-        val op = f(a)
-        op match {
-          case None => b
-          case Some(v) => Stream.cons(v, b)
-        }
-      })
-      // foldRight(Stream.empty[B])((h,t) => f(h) append t)
     }
 
     def foldRight[B](z: => B)(f: (A, => B) => B): B = {
@@ -35,6 +33,19 @@ object Exercise5_7 extends App {
       }
     }
 
+    def drop(n: Int): Stream[A] = {
+      this match {
+        case Cons(_, t) if n > 0 => t().drop(n - 1)
+        case _ => this
+      }
+    }
+
+    def toList: List[A] = {
+      this match {
+        case Empty => List.empty
+        case Cons(h, t) => h() :: t().toList
+      }
+    }
   }
 
   case object Empty extends Stream[Nothing]
@@ -54,4 +65,5 @@ object Exercise5_7 extends App {
       if (as.isEmpty) empty
       else cons(as.head, apply(as.tail: _*))
   }
+
 }
