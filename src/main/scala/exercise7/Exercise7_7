@@ -1,0 +1,12 @@
+S: map(y)(id) == y
+
+// y = map(y)(g)
+map(map(y)(g))(id) == map(y)(g)
+
+// g = id(g)
+map(map(y)(g))(id) == map(y)(id(g))
+
+// id = f
+map(map(y)(g))(f) == map(y)(f(g))
+
+G: map(map(y)(g))(f) == map(y)(f compose g)
