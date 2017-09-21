@@ -1,6 +1,6 @@
 package exercise6
 
-class Exercise6_7 {
+object Exercise6_7 extends App {
 
   trait RNG {
     def nextInt: (Int, RNG)
