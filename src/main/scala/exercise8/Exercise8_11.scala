@@ -2,7 +2,7 @@
 package exercise8
 
 object Exercise8_11 extends App {
-  case class SGen[+A](forSize: Int => Gen[A]) {
+  case class SGen[A](forSize: Int => Gen[A]) {
     def flatMap[B](f: A => SGen[B]): SGen[B] = {
       SGen(n => forSize(n).flatMap(a => f(a).forSize(n)))
     }
